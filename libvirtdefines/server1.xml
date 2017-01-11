@@ -30,13 +30,13 @@
   <devices>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/var/lib/libvirt/images/server1-disk1.qcow2'/>
+      <source file='/vmdata/server1-disk1.qcow2'/>
       <target dev='hda' bus='ide'/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
     </disk>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/var/lib/libvirt/images/server1-disk2.qcow2'/>
+      <source file='/vmdata/server1-disk2.qcow2'/>
       <target dev='hdb' bus='ide'/>
       <address type='drive' controller='0' bus='0' target='0' unit='1'/>
     </disk>

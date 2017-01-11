@@ -33,7 +33,7 @@
   <devices>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/var/lib/libvirt/images/labipa-disk1.qcow2'/>
+      <source file='/vmdata/labipa-disk1.qcow2'/>
       <backingStore/>
       <target dev='hda' bus='ide'/>
       <alias name='ide0-0-0'/>

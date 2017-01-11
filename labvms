@@ -27,11 +27,13 @@ if [ $EUID != 0 ]; then
    exit $?
 fi
 
+IMAGESPATH="/vmdata"
+
 lab_required() {
   type unzip    >/dev/null 2>&1 || yum install unzip -y
   type qemu-img >/dev/null 2>&1 || yum install qemu-img -y
   test -d /vmdata || lab_setupdatadir
-  find /vmdata -name '*.inprogress' -delete
+  find /vmdata -name '*.inprogress' -print
 }
 
 lab_checksum() {
@@ -41,7 +43,7 @@ lab_checksum() {
 }
 
 lab_setupdatadir() {
-  echo "setting up /vmdata..."
+  echo "exiting, path /vmdata missing ..."
   exit 1
 }
 
@@ -59,22 +61,20 @@ lab_convert() {
       filetarget=$(basename "$vmdk")
       filetarget="${filetarget%.*}"
       echo "converting ${vmdk} to ${filetarget}.qcow2"
-      qemu-img convert -O qcow2 ${vmdk} "${ZIPDIR}/${filetarget}.qcow2.inprogress"
+      qemu-img convert -p -O qcow2 ${vmdk} "${ZIPDIR}/${filetarget}.qcow2.inprogress"
       echo "qemu-img convert exitcode: $?"
   done
 }
 
 lab_stopvm() {
   echo "Force shutdown ${ZIPVMNAME} ..."
-  sleep 4
+  sleep 3
   virsh destroy "${ZIPVMNAME}" >/dev/null 2>&1
-  sleep 1
 }
 
 lab_startvm() {
   echo "Starting ${ZIPVMNAME} ..."
   virsh start "${ZIPVMNAME}"
-  sleep 1
 }
 
 lab_movelibvirt() {
@@ -85,14 +85,13 @@ lab_movelibvirt() {
     filetarget="${filetarget%.*}"
     # strips all before '-' server1_3.1.2.3.4-disk1.qcow2 becomes disk1.qcow2
     filetargetvm=$(echo $filetarget | cut -d "-" -f 2-)
-    mv ${diskimage} "/var/lib/libvirt/images/${ZIPVMNAME}-$filetargetvm"
+    mv ${diskimage} "${IMAGESPATH}/${ZIPVMNAME}-$filetargetvm"
     echo "Diskimage ${ZIPVMNAME}-${filetargetvm} deployed"
-    sleep 1
   done
 }
 
 lab_usage() {
-  echo "usage: $0 [labipa|server1|server2] [unzip|convert|setdisk]"
+  echo "usage: $0 [labipa|server1|server2] [unzip|convert|setdisk|fulldeploy]"
 }
 
 ###

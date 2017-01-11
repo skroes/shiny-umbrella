@@ -18,22 +18,32 @@ lab_required() {
 }
 
 lab_purgeconfig() {
+  echo "----------------------------------"
+  echo "-- purgeing virtual environment --"
+  echo "----------------------------------"
   virsh destroy labipa
   virsh destroy server1
   virsh destroy server2
-  echo "purgeing labvms"
-  virsh net-destroy labvms
-  virsh net-undefine labvms
   virsh undefine labipa
   virsh undefine server1
   virsh undefine server2
+  virsh net-destroy labvms
+  virsh net-undefine labvms
+  virsh pool-destroy vmdata
+  virsh pool-undefine vmdata
 }
 
 lab_initialization() {
-  echo "init labvms"
-  virsh net-define libvirtdefines/labvms.xml
+  echo "----------------------------------------"
+  echo "-- initialization virtual environment --"
+  echo "----------------------------------------"
+  virsh net-define libvirtdefines/network_labvms.xml
   virsh net-autostart labvms
   virsh net-start labvms
+  sleep 2
+  virsh pool-define libvirtdefines/pool_vmdata.xml
+  virsh pool-autostart vmdata
+  virsh pool-start vmdata
   sleep 2
   virsh define libvirtdefines/labipa.xml
   virsh define libvirtdefines/server1.xml
@@ -60,7 +70,6 @@ case "$1" in
     ;;
   init)
     lab_required
-    lab_purgeconfig
     lab_initialization
     ;;
   *)
