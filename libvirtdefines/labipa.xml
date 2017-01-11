@@ -31,7 +31,6 @@
     <suspend-to-disk enabled='no'/>
   </pm>
   <devices>
-    <emulator>/usr/bin/kvm</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
       <source file='/var/lib/libvirt/images/labipa-disk1.qcow2'/>

@@ -8,7 +8,13 @@ if [ $EUID != 0 ]; then
 fi
 
 lab_required() {
-  type virt-manager >/dev/null 2>&1 || yum install virt-manager -y
+  PKG=""
+  type virt-manager >/dev/null 2>&1 || PKG="$PKG virt-manager"
+  type virt-vieuwer >/dev/null 2>&1 || PKG="$PKG virt-viewer"
+  type virsh        >/dev/null 2>&1 || PKG="$PKG libvirt-client"
+  if [ "${PKG}" != "" ]; then
+    dnf install -y $PKG || yum install -y $PKG
+  fi
 }
 
 lab_purgeconfig() {
