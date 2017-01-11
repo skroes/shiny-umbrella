@@ -1,0 +1,8 @@
+<network>
+  <name>labvms</name>
+  <forward mode='route'/>
+  <bridge name='virbr1' stp='on' delay='0'/>
+  <domain name='student.example.com'/>
+  <ip address='192.168.4.2' netmask='255.255.255.0'>
+  </ip>
+</network>
