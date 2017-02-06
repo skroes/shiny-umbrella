@@ -66,7 +66,7 @@ lab_convert() {
   done
 }
 
-lab_stopvm() {
+lab_destroyvm() {
   echo "Force shutdown ${ZIPVMNAME} ..."
   sleep 3
   virsh destroy "${ZIPVMNAME}" >/dev/null 2>&1
@@ -75,6 +75,11 @@ lab_stopvm() {
 lab_startvm() {
   echo "Starting ${ZIPVMNAME} ..."
   virsh start "${ZIPVMNAME}"
+}
+
+lab_stopvm() {
+  echo "Shutdown ${ZIPVMNAME} ..."
+  virsh shutdown "${ZIPVMNAME}"
 }
 
 lab_movelibvirt() {
@@ -136,7 +141,7 @@ case "$2" in
     ;;
   setdisk)
     lab_required
-    lab_stopvm
+    lab_destroyvm
     lab_movelibvirt
     ;;
   fulldeploy)
@@ -144,7 +149,7 @@ case "$2" in
     lab_checksum
     lab_unzip
     lab_convert
-    lab_stopvm
+    lab_destroyvm
     lab_movelibvirt
     ;;
   fulldeploystart)
@@ -152,9 +157,12 @@ case "$2" in
     lab_checksum
     lab_unzip
     lab_convert
-    lab_stopvm
+    lab_destroyvm
     lab_movelibvirt
     lab_startvm
+    ;;
+  shutdown)
+    lab_stopvm
     ;;
   *)
     lab_usage
