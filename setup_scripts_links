@@ -1,0 +1,5 @@
+#!/bin/bash
+gitroot=$(git rev-parse --show-toplevel)
+for script in labkvm labvms; do
+  sudo ln -s ${gitroot}/${script} /usr/local/bin/${script}
+done
